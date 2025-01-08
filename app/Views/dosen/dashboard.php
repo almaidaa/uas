@@ -11,6 +11,7 @@
 <body>
     <div class="container mt-5">
         <a href="dosen/jadwal/index" class="btn btn-primary mb-3">Lihat Jadwal</a>
+        <!-- <a href="dosen/nilai/nilai" class="btn btn-primary mb-3">Kelola Nilai</a> -->
         <h1>Data Dosen</h1>
         <!-- <a href="/dosen/create" class="btn btn-primary mb-3">Tambah Dosen</a> -->
         <h2><?= $dosen['nama']; ?></h2>

@@ -33,8 +33,8 @@
                 <label for="dosen_id">Pilih Dosen</label>
                 <select name="dosen_id" id="dosen_id" class="form-control" required>
                     <option value="">-- Pilih Dosen --</option>
-                    <?php foreach ($users as $user): ?>
-                        <option value="<?= $user['id']; ?>"><?= $user['nama']; ?></option>
+                    <?php foreach ($dosen as $d): ?>
+                        <option value="<?= $d['id']; ?>"><?= $d['username']; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

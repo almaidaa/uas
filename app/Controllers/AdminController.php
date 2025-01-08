@@ -7,6 +7,10 @@ use App\Models\DosenModel;
 use App\Models\MataKuliahModel;
 use App\Models\JadwalPerkuliahanModel;
 use App\Models\UserModel;
+// use App\Models\KrsModel;
+use App\Models\KRSModel;
+// use App\Models\MahasiswaModel;
+// use App\Models\JadwalModel;
 
 class AdminController extends BaseController
 {
@@ -16,6 +20,7 @@ class AdminController extends BaseController
     protected $mataKuliahModel;
     protected $jadwalModel;
     protected $userModel;
+    protected $krsModel;
 
     public function __construct()
     {
@@ -24,6 +29,7 @@ class AdminController extends BaseController
         $this->mataKuliahModel = new MataKuliahModel();
         $this->jadwalModel = new JadwalPerkuliahanModel();
         $this->userModel = new UserModel();
+        $this->krsModel = new KrsModel();
     }
     public function index()
     {
@@ -32,26 +38,48 @@ class AdminController extends BaseController
 
     public function manageMahasiswa() // Mahasiswa
     {
-        $mahasiswaModel = new MahasiswaModel();
-        $data['mahasiswa'] = $mahasiswaModel->findAll();
+        $data = [
+            'title' => 'Daftar mahasiswa',
+            'mahasiswa' => $this->mahasiswaModel->getAllMahasiswaWithUser(),
+        ];
         return view('admin/mahasiswa/mahasiswa', $data);
     }
 
     public function createmhs() //Mahasiswa
-    {
-        return view('admin/mahasiswa/create');
+    {   
+        $data = [
+            'title' => 'Tambah Mahasiswa',
+            'validation' => \Config\Services::validation(),
+        ];
+        return view('admin/mahasiswa/create', $data);
     }
 
     public function storemhs() //mahasiswa
     {
-        $this->mahasiswaModel->save([
-            'nim' => $this->request->getPost('nim'),
-            'nama' => $this->request->getPost('nama'),
-            'jurusan' => $this->request->getPost('jurusan'),
-            'angkatan' => $this->request->getPost('angkatan'),
-        ]);
+       // Validasi input
+       if (!$this->validate([
+        'nim'     => 'required|is_unique[mahasiswa.nim]|max_length[15]',
+        'nama'    => 'required|min_length[3]|max_length[100]',
+        'jurusan'  => 'required|min_length[3]|max_length[100]',
+        'angkatan'  => 'required|numeric',
+    ])) {
+        return redirect()->to('admin/mahasiswa/create')->withInput()->with('validation', \Config\Services::validation());
+    }
 
-        return redirect()->to('/admin/mahasiswa/mahasiswa');
+    // Ambil data dari input
+    $dataMahasiswa = [
+        'nim' => $this->request->getVar('nim'),
+        'nama' => $this->request->getVar('nama'),
+        'jurusan' => $this->request->getVar('jurusan'),
+        'angkatan' => $this->request->getVar('angkatan'),
+    ];
+
+    // Tambahkan dosen beserta user
+    if ($this->mahasiswaModel->createMahasiswaWithUser($dataMahasiswa)) {
+        return redirect()->to('admin/mahasiswa/mahasiswa')->with('success', 'Dosen berhasil ditambahkan.');
+    } else {
+        return redirect()->to('admin/mahasiswa/create')->with('error', 'Gagal menambahkan dosen.');
+    }
     }
 
     public function manageDosen()
@@ -107,23 +135,30 @@ class AdminController extends BaseController
 
     public function createmk()
     {
-        $users = $this->userModel->where('role', 'dosen')->findAll();
+        $dosen = $this->userModel->where('role', 'dosen')->findAll();
         return view('admin/mata_kuliah/create', [
-            'users' => $users, // Variabel yang dikirim ke view
+            'dosen' => $dosen, // Variabel yang dikirim ke view
         ]);
     }
 
     public function storemk()
     {
-        $this->mataKuliahModel->save([
+        $data = [
             'kode_mk' => $this->request->getPost('kode_mk'),
             'nama_mk' => $this->request->getPost('nama_mk'),
             'sks' => $this->request->getPost('sks'),
             'semester' => $this->request->getPost('semester'),
             'dosen_id' => $this->request->getPost('dosen_id'),
-        ]);
+        ];
+        // Debug untuk memeriksa data dosen_id
+        // dd($data);
+        if ($this->mataKuliahModel->insert($data)) {
+            return redirect()->to('admin/mata_kuliah/index')->with('success', 'Mata kuliah berhasil ditambahkan.');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal menambahkan mata kuliah.');
+        }
 
-        return redirect()->to('admin/mata_kuliah/index');
+        // return redirect()->to('admin/mata_kuliah/index');
     }
 
     public function manageJadwal()
@@ -136,6 +171,7 @@ class AdminController extends BaseController
 
         return view('admin/jadwal/index', $data);
     }
+
 
     public function createjdwl()
     {
@@ -160,6 +196,68 @@ class AdminController extends BaseController
 
         return redirect()->to('admin/jadwal/index');
     }
+
+    public function detailJadwal($jadwalId)
+    {
+        $mahasiswa    = $this->krsModel->getMahasiswaByJadwal($jadwalId);
+        $allMahasiswaNotRegistered = $this->mahasiswaModel
+            ->select('*')
+            ->whereNotIn('mahasiswa.id', function($builder) {
+                return $builder->select('mahasiswa_id')->from('krs');
+            })
+            ->findAll();
+
+
+        $jadwal = $this->jadwalModel
+            ->select('jadwal_perkuliahan.id, mata_kuliah.nama_mk as mata_kuliah, jadwal_perkuliahan.hari, jadwal_perkuliahan.jam_mulai, jadwal_perkuliahan.jam_selesai')
+            ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
+            ->find($jadwalId);
+
+        if (!$jadwal) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Jadwal tidak ditemukan.');
+        }
+
+        return view('admin/jadwal/detail_jadwal', [
+            'jadwal' => $jadwal,
+            'mahasiswa' => $mahasiswa,
+            'allMahasiswa' => $allMahasiswaNotRegistered,
+        ]);
+    }
+
+    public function tambahMahasiswaKeJadwal()
+    {
+        $jadwalId = $this->request->getPost('jadwal_id');
+        $mahasiswaId = $this->request->getPost('mahasiswa_id');
+
+        if (!$jadwalId || !$mahasiswaId) {
+            return redirect()->back()->with('error', 'Data tidak lengkap.');
+        }
+
+        // Cek apakah mahasiswa sudah terdaftar di jadwal ini
+        $existing = $this->krsModel->where('jadwal_id', $jadwalId)
+            ->where('mahasiswa_id', $mahasiswaId)
+            ->first();
+
+        // dd($existing);
+        $mkid = $this->jadwalModel->find($jadwalId)['mata_kuliah_id'];
+        // dd($mkid);
+        $semester = $this->mataKuliahModel->find($mkid)['semester'];
+        // dd($semester);
+        if ($existing) {
+            return redirect()->back()->with('error', 'Mahasiswa sudah terdaftar di jadwal ini.');
+        }
+
+        // Tambahkan mahasiswa ke KRS
+        $this->krsModel->insert([
+            'jadwal_id' => $jadwalId,
+            'semester' => $semester,
+            'mata_kuliah_id' => $mkid,
+            'mahasiswa_id' => $mahasiswaId,
+        ]);
+
+        return redirect()->back()->with('success', 'Mahasiswa berhasil ditambahkan.');
+    }
+
 
     public function laporan()
     {

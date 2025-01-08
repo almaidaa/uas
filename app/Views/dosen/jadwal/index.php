@@ -33,6 +33,9 @@
                             <td><?= $row['jam_mulai']; ?> - <?= $row['jam_selesai']; ?></td>
                             <td><?= $row['nama_mata_kuliah']; ?> (<?= $row['kode_mata_kuliah']; ?>)</td>
                             <td><?= $row['ruangan']; ?></td>
+                            <td>
+                                <a href="<?= base_url('dosen/nilai/nilai/' . $row['id']) ?>" class="btn btn-primary">Lihat Nilai</a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

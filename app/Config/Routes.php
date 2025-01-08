@@ -5,7 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-// $routes->get('/', 'Home::index');
+$routes->get('/', 'AuthController::login');
 $routes->get('/login', 'AuthController::login');
 $routes->post('/login/process', 'AuthController::processLogin');
 $routes->get('/logout', 'AuthController::logout');
@@ -36,6 +36,8 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
     $routes->get('jadwal/index', 'AdminController::manageJadwal');
     $routes->get('jadwal/create', 'AdminController::createjdwl');
     $routes->post('jadwal/index/store', 'AdminController::storejdwl');
+    $routes->get('jadwal/detail_jadwal/(:num)', 'AdminController::detailJadwal/$1');
+    $routes->post('jadwal/detail_jadwal/tambah', 'AdminController::tambahMahasiswaKeJadwal');
 
     $routes->get('laporan', 'AdminController::laporan');
     $routes->get('notifikasi', 'AdminController::manageNotifikasi');
@@ -44,18 +46,21 @@ $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
 
 // Routes untuk Dosen
 $routes->group('dosen', ['filter' => 'auth:dosen'], function ($routes) {
+    
+    $routes->post('nilai/input_nilai/update/', 'DosenController::updateNilai');
+    $routes->get('nilai/input_nilai/(:num)/(:num)', 'DosenController::inputNilai/$1/$2');
+
+    $routes->get('nilai/nilai/(:num)', 'DosenController::lihatNilai/$1');
     $routes->get('jadwal/index', 'DosenController::jadwal');
-    $routes->get('input_nilai/(:num)', 'DosenController::inputNilai/$1');
-    $routes->get('nilai', 'NilaiController::index');
     $routes->get('nilai/create', 'NilaiController::create');
-    $routes->post('nilai/store', 'NilaiController::store');
     $routes->get('detail/(:num)', 'DosenController::detail/$1');
 });
 
 // Routes untuk Mahasiswa
-$routes->group('mahasiswa', ['filter' => 'auth'], function ($routes) {
-    $routes->get('nilai', 'MahasiswaController::lihatNilai', ['filter' => 'role:mahasiswa']);
-    $routes->get('profile', 'MahasiswaController::profile', ['filter' => 'role:mahasiswa']);
+$routes->group('mahasiswa', ['filter' => 'auth:mahasiswa'], function ($routes) {
+    $routes->get('nilai/nilai/(:num)', 'MahasiswaController::lihatNilai/$1');
+    // $routes->get('dashboard', 'MahasiswaController::home');
+    $routes->get('krs/index', 'MahasiswaController::krs');
 });
 
 $routes->group('jadwal', ['filter' => 'auth'], function ($routes) {
@@ -65,7 +70,7 @@ $routes->group('jadwal', ['filter' => 'auth'], function ($routes) {
 });
 
 $routes->group('krs', ['filter' => 'auth'], function ($routes) {
-    $routes->get('/', 'KrsController::index');
+    $routes->get('index', 'KrsController::index');
     $routes->get('create', 'KrsController::create');
     $routes->post('store', 'KrsController::store');
 });

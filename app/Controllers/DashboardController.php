@@ -60,7 +60,8 @@ class DashboardController extends BaseController
         $id         = session()->get('user_id');
         $role       = session()->get('role');
         $dosen      = $this->dosenModel->where('user_id', $id)->first();
-        $mataKuliah = $this->dosenModel->getMataKuliahByDosen($dosen['id']);
+        $mataKuliah = $this->dosenModel->getMataKuliahByDosen($dosen['user_id']);
+        // dd($mataKuliah);
 
         if (!$dosen) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Dosen tidak ditemukan');
@@ -77,16 +78,10 @@ class DashboardController extends BaseController
 
     private function mahasiswaDashboard()
     {
-        $mahasiswaId = session()->get('id');
+        $mahasiswaId = session()->get('user_id');
+        $mahasiswa = $this->mahasiswaModel->getMahasiswaByUserId($mahasiswaId);
+        // dd($mahasiswaId);
 
-        $data = [
-            'nilai' => $this->nilaiModel
-                ->select('mata_kuliah.nama_mk, nilai.nilai')
-                ->join('mata_kuliah', 'mata_kuliah.id = nilai.mata_kuliah_id')
-                ->where('nilai.mahasiswa_id', $mahasiswaId)
-                ->findAll(),
-        ];
-
-        return view('dashboard/mahasiswa', $data);
+        return view('mahasiswa/dashboard', ['mahasiswa' => $mahasiswa]);
     }
 }

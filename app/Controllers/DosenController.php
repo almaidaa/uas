@@ -57,76 +57,85 @@ class DosenController extends BaseController
         return view('dosen/jadwal/index',  $data);
     }
 
-    public function lihatNilai($mataKuliahId)
+    public function lihatNilai($jadwalId)
     {
-        // Cek apakah dosen memiliki mata kuliah ini
-        $mataKuliah = $this->mataKuliahModel
-            ->where('id', $mataKuliahId)
-            ->where('dosen_id', session()->get('user_id'))
-            ->first();
+        // Ambil data mahasiswa dan nilai berdasarkan jadwal
+        $nilai = $this->krsModel
+            // ->select('*')
+            ->select('krs.id as krs_id, mahasiswa.nim, mahasiswa.nama as mahasiswa_nama, mata_kuliah.nama_mk as mata_kuliah, krs.nilai, mahasiswa.*')
+            ->join('mahasiswa', 'mahasiswa.id = krs.mahasiswa_id')
+            ->join('mata_kuliah', 'mata_kuliah.id = krs.mata_kuliah_id')
+            ->where('krs.jadwal_id', $jadwalId)
+            ->findAll();
+        // dd($nilai);
 
-        if (!$mataKuliah) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Mata Kuliah tidak ditemukan atau bukan milik Anda.');
+        $jadwal = $this->jadwalModel
+            ->select('jadwal_perkuliahan.id, mata_kuliah.nama_mk as mata_kuliah, jadwal_perkuliahan.hari, jadwal_perkuliahan.jam_mulai, jadwal_perkuliahan.jam_selesai')
+            ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
+            ->find($jadwalId);
+
+        if (!$jadwal) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Jadwal tidak ditemukan.');
         }
 
-        // Ambil daftar mahasiswa dengan nilai
-        $mahasiswaKrs = $this->krsModel
-            ->select('krs.*, mahasiswa.nama as nama_mahasiswa')
-            ->join('mahasiswa', 'krs.mahasiswa_id = mahasiswa.id')
-            ->where('mata_kuliah_id', $mataKuliahId)
-            ->findAll();
+        return view('dosen/nilai/nilai', [
+            'nilai' => $nilai,
+            'jadwal' => $jadwal,
+        ]);
 
-        $data = [
-            'title' => 'Lihat Nilai',
-            'mataKuliah' => $mataKuliah,
-            'mahasiswaKrs' => $mahasiswaKrs,
-        ];
-
-        return view('dosen/nilai', $data);
+        // return view('dosen/nilai', $data);
     }
 
-    public function inputNilai($mataKuliahId)
+    public function inputNilai($jadwalId, $userId)
     {
-        // Cek apakah dosen memiliki mata kuliah ini
-        $mataKuliah = $this->mataKuliahModel
-            ->where('id', $mataKuliahId)
-            ->where('dosen_id', session()->get('user_id'))
-            ->first();
-
-        if (!$mataKuliah) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Mata Kuliah tidak ditemukan atau bukan milik Anda.');
-        }
-
-        // Ambil daftar mahasiswa yang terdaftar di mata kuliah ini
-        $mahasiswaKrs = $this->krsModel
-            ->select('krs.*, mahasiswa.nama as nama_mahasiswa')
-            ->join('mahasiswa', 'krs.mahasiswa_id = mahasiswa.id')
-            ->where('mata_kuliah_id', $mataKuliahId)
+        // dd($jadwalId,$userId);
+        // Ambil data mahasiswa dari KRS berdasarkan jadwal yang dipilih
+        $krs = $this->krsModel
+            ->select('krs.id as krs_id, mahasiswa.nama as mahasiswa_nama, mahasiswa.nim, krs.nilai, krs.*')
+            ->join('mahasiswa', 'mahasiswa.id = krs.mahasiswa_id')
+            ->where('krs.jadwal_id', $jadwalId)
+            ->Where('krs.mahasiswa_id', $userId)
             ->findAll();
+            // dd($krs);
 
-        if ($this->request->getMethod() === 'post') {
-            // Validasi dan simpan nilai yang diinput
-            $nilaiData = $this->request->getPost('nilai');
-            $allowedGrades = ['A', 'B', 'C', 'D', 'E'];
+            $jadwal = $this->jadwalModel
+            ->select('jadwal_perkuliahan.id, mata_kuliah.nama_mk as mata_kuliah, jadwal_perkuliahan.hari, jadwal_perkuliahan.jam_mulai, jadwal_perkuliahan.jam_selesai')
+            ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
+            ->find($jadwalId);
 
-            foreach ($nilaiData as $krsId => $nilai) {
-                if (!in_array($nilai, $allowedGrades)) {
-                    return redirect()->back()->with('error', 'Nilai harus berupa huruf: A, B, C, D, atau E.');
-                }
-                $this->krsModel->update($krsId, ['nilai' => $nilai]);
-            }
 
-            return redirect()->to('/dosen/nilai/' . $mataKuliahId)->with('success', 'Nilai berhasil disimpan.');
+        if (!$jadwal) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Jadwal tidak ditemukan.');
         }
 
-        $data = [
-            'title' => 'Input Nilai',
-            'mataKuliah' => $mataKuliah,
-            'mahasiswaKrs' => $mahasiswaKrs,
-        ];
-
-        return view('dosen/input_nilai', $data);
+        return view('dosen/nilai/input_nilai', [
+            'krs' => $krs,
+            'jadwal' => $jadwal,
+        ]);
+        // return view('dosen/input_nilai', $data);
     }
+
+    public function updateNilai()
+    {
+        // ambil parameter untuk ubah datanya
+        $idmhs = $this->request->getPost('userId');
+        $idjdwl = $this->request->getPost('jadwalId');
+
+        $dataygmaudiubah = $this->krsModel
+                                ->where('mahasiswa_id',$idmhs)
+                                ->where('jadwal_id',$idjdwl)
+                                ->first();
+                                // dd($dataygmaudiubah);
+
+        $nilai = $this->request->getPost('nilai');
+
+        // dd($idmhs,$nilai,$krs);
+        $dataygmaudiubah['nilai'] = $nilai;
+        $this->krsModel->save($dataygmaudiubah);
+        return redirect()->to(base_url('dosen/nilai/nilai/' . $dataygmaudiubah['jadwal_id']));
+    }
+
+
 
 
 

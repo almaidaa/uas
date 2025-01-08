@@ -16,6 +16,7 @@
             <thead>
                 <tr>
                     <th>No</th>
+                    <!-- <th>user id</th> -->
                     <th>NIM</th>
                     <th>Nama</th>
                     <th>Jurusan</th>

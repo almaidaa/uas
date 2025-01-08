@@ -16,7 +16,6 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>User ID</th>
                     <th>NIP</th>
                     <th>Nama</th>
                     <th>Jurusan</th>
@@ -26,7 +25,6 @@
                 <?php foreach ($dosen as $key => $row): ?>
                     <tr>
                         <td><?= $key + 1 ?></td>
-                        <td><?= esc($row['user_id']) ?></td>
                         <td><?= esc($row['nip']) ?></td>
                         <td><?= esc($row['nama']) ?></td>
                         <td><?= esc($row['departemen']) ?></td>

@@ -20,9 +20,9 @@ class KrsController extends BaseController
 
     public function index()
     {
-        $mahasiswaId = session()->get('id');
+        $mahasiswaId = session()->get('user_id');
         $data['krs'] = $this->krsModel
-            ->select('krs.*, jadwal_perkuliahan.hari, jadwal_perkuliahan.jam_mulai, jadwal_perkuliahan.jam_selesai, jadwal_perkuliahan.ruangan, mata_kuliah.nama_mk')
+            ->select('krs.*, jadwal_perkuliahan.*, mata_kuliah.*')
             ->join('jadwal_perkuliahan', 'jadwal_perkuliahan.id = krs.jadwal_id')
             ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
             ->where('krs.mahasiswa_id', $mahasiswaId)
