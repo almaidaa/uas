@@ -15,7 +15,8 @@ class JadwalPerkuliahanModel extends Model
         'hari',
         'jam_mulai',
         'jam_selesai',
-        'ruangan'
+        'ruangan',
+        'semester',
     ];
 
     protected $useTimestamps = true;

@@ -54,7 +54,7 @@ class DosenModel extends Model
         // Simpan data user ke tabel users
         $userData = [
             'username' => $dosenData['nip'], // Gunakan NIP sebagai username
-            'password' => password_hash('123456', PASSWORD_DEFAULT), // 123456 password
+            'password' => password_hash($dosenData['nip'], PASSWORD_DEFAULT), // 123456 password
             'role'     => 'dosen',
         ];
 
@@ -80,6 +80,6 @@ class DosenModel extends Model
             ->where('mata_kuliah.dosen_id', $dosenId)
             ->get()
             ->getResultArray();
-        // dd($dosenId);
+         dd($dosenId);
     }
 }

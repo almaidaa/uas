@@ -49,6 +49,7 @@ class JadwalController extends BaseController
             'jam_mulai'      => $this->request->getPost('jam_mulai'),
             'jam_selesai'    => $this->request->getPost('jam_selesai'),
             'ruangan'        => $this->request->getPost('ruangan'),
+            'semester'       => $this->request->getPost('semester'),
         ]);
 
         return redirect()->to('/jadwal');

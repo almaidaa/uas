@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Jadwal Perkuliahan</title>
+    <title>Edit Jadwal Perkuliahan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Body and general page styling */
@@ -117,15 +118,16 @@
 
 <body>
     <div class="container">
-        <h1>Tambah Jadwal Perkuliahan</h1>
-        <form action="index/store" method="post">
+        <h1>Edit Jadwal Perkuliahan</h1>
+        <form action="/admin/jadwal/update" method="post">
             <?= csrf_field() ?>
+            <input type="text" name="idnya" value="<?= esc($jadwal['id']) ?>" hidden>
             <div class="mb-3">
                 <label for="mata_kuliah_id" class="form-label">Mata Kuliah</label>
                 <select name="mata_kuliah_id" class="form-control" required>
                     <option value="">Pilih Mata Kuliah</option>
                     <?php foreach ($mata_kuliah as $mk): ?>
-                        <option value="<?= $mk['id'] ?>"><?= esc($mk['nama_mk']) ?></option>
+                        <option value="<?= $mk['id'] ?>" <?= isset($jadwal['id']) && $jadwal['mata_kuliah_id'] == $mk['id'] ? 'selected' : '' ?>><?= esc($mk['nama_mk']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -135,42 +137,48 @@
                 <select name="dosen_id" class="form-control" required>
                     <option value="">Pilih Dosen</option>
                     <?php foreach ($dosen as $d): ?>
-                        <option value="<?= $d['id'] ?>"><?= esc($d['nama']) ?></option>
+                        <option value="<?= $d['id'] ?>" <?= isset($jadwal['id']) && $jadwal['dosen_id'] == $d['id'] ? 'selected' : '' ?>><?= esc($d['nama']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
             <div class="mb-3">
                 <label for="hari" class="form-label">Hari</label>
-                <input type="text" name="hari" class="form-control" required>
+                <select name="hari" class="form-control" required>
+                    <option value="">Pilih Hari</option>
+                    <?php 
+                    $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+                    foreach ($days as $day): 
+                    ?>
+                        <option value="<?= $day ?>" <?= isset($jadwal['hari']) && $jadwal['hari'] == $day ? 'selected' : '' ?>><?= $day ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <div class="mb-3">
                 <label for="jam_mulai" class="form-label">Jam Mulai</label>
-                <input type="time" name="jam_mulai" class="form-control" required>
+                <input type="time" name="jam_mulai" class="form-control" value="<?= $jadwal['jam_mulai'] ?? '' ?>" required>
             </div>
 
             <div class="mb-3">
                 <label for="jam_selesai" class="form-label">Jam Selesai</label>
-                <input type="time" name="jam_selesai" class="form-control" required>
+                <input type="time" name="jam_selesai" class="form-control" value="<?= $jadwal['jam_selesai'] ?? '' ?>" required>
             </div>
 
             <div class="mb-3">
                 <label for="ruangan" class="form-label">Ruangan</label>
-                <input type="text" name="ruangan" class="form-control" required>
+                <input type="text" name="ruangan" class="form-control" value="<?= $jadwal['ruangan'] ?? '' ?>" required>
             </div>
 
             <div class="mb-3">
                 <label for="semester" class="form-label">Semester</label>
                 <select name="semester" class="form-control" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
+                    <?php for ($i = 1; $i <= 8; $i++): ?>
+                        <option value="<?= $i ?>" 
+                        <?= isset($jadwal['semester']) && $jadwal['semester'] == $i ? 'selected' : '' ?>>
+                        <?= $i ?>
+                    </option>
+                    <?php endfor; ?>
                 </select>
             </div>
 

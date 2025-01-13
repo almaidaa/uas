@@ -17,27 +17,43 @@ $routes->get('/dashboard', 'DashboardController::index', ['filter' => 'auth']);
 // Routes untuk Admin
 $routes->group('admin', ['filter' => 'auth:admin'], function ($routes) {
     $routes->get('/', 'AdminController::index');
+    // $routes->get('dashboard', 'DashboardController::adminDashboard');
     //admin - mahasiswa
     $routes->get('mahasiswa/mahasiswa', 'AdminController::manageMahasiswa');
     $routes->get('mahasiswa/create', 'AdminController::createmhs');
     $routes->post('mahasiswa/mahasiswa/store', 'AdminController::storemhs');
+    $routes->get('mahasiswa/edit/(:num)', 'AdminController::editmhs/$1');
+    $routes->post('mahasiswa/mahasiswa/update/(:num)', 'AdminController::updatemhs/$1');
+    $routes->get('mahasiswa/mahasiswa/delete/(:num)', 'AdminController::deletemhs/$1');
+
 
     //admin - dosen
     $routes->get('dosen/index', 'AdminController::manageDosen');
     $routes->get('dosen/create', 'AdminController::createdosen');
     $routes->post('dosen/index/store', 'AdminController::storedosen');
+    $routes->get('dosen/edit/(:num)', 'AdminController::editdosen/$1');
+    $routes->post('dosen/index/update/(:num)', 'AdminController::updatedosen/$1');
+    $routes->get('dosen/index/delete/(:num)', 'AdminController::deletedosen/$1');
 
     // admin - mk
     $routes->get('mata_kuliah/index', 'AdminController::manageMataKuliah');
     $routes->get('mata_kuliah/create', 'AdminController::createmk');
     $routes->post('mata_kuliah/index/store', 'AdminController::storemk');
+    $routes->get('mata_kuliah/edit/(:num)', 'AdminController::editmk/$1');
+    $routes->post('mata_kuliah/update/(:num)', 'AdminController::updatemk/$1');
+    $routes->get('mata_kuliah/index/delete/(:num)', 'AdminController::deletemk/$1');
 
     //admin - jadwal
     $routes->get('jadwal/index', 'AdminController::manageJadwal');
     $routes->get('jadwal/create', 'AdminController::createjdwl');
     $routes->post('jadwal/index/store', 'AdminController::storejdwl');
+    $routes->get('jadwal/edit/(:num)', 'AdminController::editjdwl/$1');
+    $routes->post('jadwal/update', 'AdminController::updatejdwl');
+    $routes->get('jadwal/index/delete/(:num)', 'AdminController::deletejdwl/$1');
     $routes->get('jadwal/detail_jadwal/(:num)', 'AdminController::detailJadwal/$1');
     $routes->post('jadwal/detail_jadwal/tambah', 'AdminController::tambahMahasiswaKeJadwal');
+    $routes->post('jadwal/detail_jadwal/hapus/(:num)/(:num)', 'AdminController::hapusMahasiswaDariJadwal/$1/$2');
+
 
     $routes->get('laporan', 'AdminController::laporan');
     $routes->get('notifikasi', 'AdminController::manageNotifikasi');
@@ -59,8 +75,8 @@ $routes->group('dosen', ['filter' => 'auth:dosen'], function ($routes) {
 // Routes untuk Mahasiswa
 $routes->group('mahasiswa', ['filter' => 'auth:mahasiswa'], function ($routes) {
     $routes->get('nilai/nilai/(:num)', 'MahasiswaController::lihatNilai/$1');
-    // $routes->get('dashboard', 'MahasiswaController::home');
     $routes->get('krs/index', 'MahasiswaController::krs');
+    $routes->get('khs/dashboard', 'MahasiswaController::khs');
 });
 
 $routes->group('jadwal', ['filter' => 'auth'], function ($routes) {

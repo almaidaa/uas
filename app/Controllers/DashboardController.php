@@ -60,7 +60,7 @@ class DashboardController extends BaseController
         $id         = session()->get('user_id');
         $role       = session()->get('role');
         $dosen      = $this->dosenModel->where('user_id', $id)->first();
-        $mataKuliah = $this->dosenModel->getMataKuliahByDosen($dosen['user_id']);
+        $mata_Kuliah = $this->dosenModel->getMataKuliahByDosen($dosen['user_id']);
         // dd($mataKuliah);
 
         if (!$dosen) {
@@ -70,7 +70,7 @@ class DashboardController extends BaseController
         $data = [
             'title' => 'Detail Dosen',
             'dosen' => $dosen,
-            'mata_Kuliah' => $mataKuliah,
+            'mata_Kuliah' => $mata_Kuliah,
         ];
 
         return view('dosen/dashboard', $data);

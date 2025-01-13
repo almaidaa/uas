@@ -90,4 +90,28 @@ class MahasiswaController extends BaseController
         return view('mahasiswa/krs/index', $data);
     }
 
+    public function khs()
+    {
+        $mahasiswaId = session()->get('user_id');
+        $data['khs'] = $this->krsModel
+            ->select('krs.*, jadwal_perkuliahan.*, mata_kuliah.*, dosen.*')
+            ->join('jadwal_perkuliahan', 'jadwal_perkuliahan.id = krs.jadwal_id')
+            ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
+            ->join('dosen', 'dosen.id = jadwal_perkuliahan.dosen_id')
+            ->where('krs.mahasiswa_id', $mahasiswaId)
+            ->findAll();
+
+            // dd($data);
+
+        // return view('mahasiswa/khs/dashboard', $data);
+
+        // $mahasiswaId = session()->get('id'); // ID mahasiswa yang login
+        // $khs = $this->krsModel->getKHSByMahasiswa($mahasiswaId);
+
+        return view('mahasiswa/khs/dashboard', [
+            'title' => 'Kartu Hasil Studi',
+            'khs' => $data,
+        ]);
+    }
+
 }

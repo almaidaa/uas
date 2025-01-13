@@ -10,7 +10,10 @@
 
 <body>
     <div class="container mt-5">
-        <h1>Dashboard Admin</h1>
+        <h1>Selamat Datang, <?= esc($username) ?>!</h1>
+        <p>Peran Anda: <?= esc($role) ?></p>
+        <a href="/logout" class="btn btn-danger">Logout</a>
+    </div>
         <div class="row">
             <div class="col-md-3">
                 <div class="card">
