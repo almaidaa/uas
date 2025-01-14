@@ -49,6 +49,7 @@
                     <th>No</th>
                     <th>Kode Mata Kuliah</th>
                     <th>Nama Mata Kuliah</th>
+                    <!-- <th>Nama Dosen</th> -->
                     <th>SKS</th>
                     <th>Semester</th>
                     <th>Aksi</th>
@@ -76,3 +77,5 @@
 </body>
 
 </html>
+
+

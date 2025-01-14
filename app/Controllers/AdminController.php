@@ -296,22 +296,26 @@ class AdminController extends BaseController
 
     public function storemk()
     {
+        $kode_mk = $this->request->getPost('kode_mk');
+        
+        // Validasi unique kode_mk
+        if ($this->mataKuliahModel->where('kode_mk', $kode_mk)->first()) {
+            return redirect()->back()->withInput()->with('error', 'Kode mata kuliah sudah ada.');
+        }
+
         $data = [
-            'kode_mk' => $this->request->getPost('kode_mk'),
+            'kode_mk' => $kode_mk,
             'nama_mk' => $this->request->getPost('nama_mk'),
             'sks' => $this->request->getPost('sks'),
             'semester' => $this->request->getPost('semester'),
-            'dosen_id' => $this->request->getPost('dosen_id'),
+            // 'dosen_id' => $this->request->getPost('dosen_id'),
         ];
-        // Debug untuk memeriksa data dosen_id
-        // dd($data);
+
         if ($this->mataKuliahModel->insert($data)) {
             return redirect()->to('admin/mata_kuliah/index')->with('success', 'Mata kuliah berhasil ditambahkan.');
         } else {
             return redirect()->back()->withInput()->with('error', 'Gagal menambahkan mata kuliah.');
         }
-
-        // return redirect()->to('admin/mata_kuliah/index');
     }
 
     public function editmk($id)
@@ -324,15 +328,22 @@ class AdminController extends BaseController
     public function updatemk($id)
     {
         $mataKuliahModel = new MataKuliahModel();
+        $mataKuliah = $mataKuliahModel->find($id);
+        if (!$mataKuliah) {
+            return redirect()->back()->with('error', 'Mata kuliah tidak ditemukan.');
+        }
+
         $data = [
             'nama_mk' => $this->request->getPost('nama_mk'),
             'sks' => $this->request->getPost('sks'),
+            'semester' => $this->request->getPost('semester'),
         ];
         if ($mataKuliahModel->update($id, $data)) {
             return redirect()->to('admin/mata_kuliah/index')->with('success', 'Mata kuliah berhasil diperbarui.');
         } else {
             return redirect()->back()->withInput()->with('error', 'Gagal memperbarui mata kuliah.');
         }
+        // dd($data['semester']); 
     }
 
     public function deletemk($id)
@@ -366,14 +377,17 @@ class AdminController extends BaseController
 
     public function storejdwl()
     {
+        $mataKuliahId = $this->request->getPost('mata_kuliah_id');
+        $semester = $this->mataKuliahModel->find($mataKuliahId)['semester'];
+
         $this->jadwalModel->save([
-            'mata_kuliah_id' => $this->request->getPost('mata_kuliah_id'),
+            'mata_kuliah_id' => $mataKuliahId,
             'dosen_id'       => $this->request->getPost('dosen_id'),
             'hari'           => $this->request->getPost('hari'),
             'jam_mulai'      => $this->request->getPost('jam_mulai'),
             'jam_selesai'    => $this->request->getPost('jam_selesai'),
             'ruangan'        => $this->request->getPost('ruangan'),
-            'semester'        => $this->request->getPost('semester'),
+            'semester'        => $semester,
         ]);
 
         return redirect()->to('admin/jadwal/index');
@@ -394,15 +408,16 @@ class AdminController extends BaseController
         try {
             $jadwalModel = new JadwalPerkuliahanModel();
             $jadwalId= $this->request->getPost('idnya');
+            
 
             $data = [
-                'mata_kuliah_id' => $this->request->getPost('mata_kuliah_id'),
+                // 'mata_kuliah_id' => $this->request->getPost('mata_kuliah_id'),
                 'dosen_id'       => $this->request->getPost('dosen_id'),
                 'hari'           => $this->request->getPost('hari'),
                 'jam_mulai'      => $this->request->getPost('jam_mulai'),
                 'jam_selesai'    => $this->request->getPost('jam_selesai'),
                 'ruangan'        => $this->request->getPost('ruangan'),
-                'semester'        => $this->request->getPost('semester'),
+                // 'semester'       => $this->request->getPost('semester'),
             ];
             $jadwalModel->update($jadwalId, $data);
             return redirect()->to('admin/jadwal/index')->with('message', 'Mata Kuliah updated successfully.');

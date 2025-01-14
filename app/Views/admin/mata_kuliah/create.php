@@ -104,6 +104,16 @@
 <body>
     <div class="container">
         <h1>Tambah MK</h1>
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-success" role="alert">
+                <?= session()->getFlashdata('success') ?>
+            </div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= session()->getFlashdata('error') ?>
+            </div>
+        <?php endif; ?>
         <form action="index/store" method="post">
             <?= csrf_field() ?>
             <div class="mb-3">
@@ -122,19 +132,11 @@
                 <label for="semester" class="form-label">Semester</label>
                 <input type="text" name="semester" class="form-control" id="semester" required>
             </div>
-            <div class="form-group">
-                <label for="dosen_id">Pilih Dosen</label>
-                <select name="dosen_id" id="dosen_id" class="form-control" required>
-                    <option value="">-- Pilih Dosen --</option>
-                    <?php foreach ($dosen as $d): ?>
-                        <option value="<?= $d['user_id']; ?>"><?= $d['nama']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
             <button type="submit" class="btn btn-primary">Simpan</button>
-            <a href="/dashboard" class="btn btn-secondary">Batal</a>
+            <a href="/admin/mata_kuliah/index" class="btn btn-secondary">Batal</a>
         </form>
     </div>
 </body>
 
 </html>
+

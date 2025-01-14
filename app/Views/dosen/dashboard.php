@@ -34,6 +34,12 @@
 </head>
 
 <body>
+
+
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <h1 style="margin: 20px;">Selamat Datang, <?= $dosen['nama'] ?>!</h1>
+    </div>
+    
     <div class="container mt-5">
         <h1>Data Dosen</h1>
         <a href="dosen/jadwal/index" class="btn btn-primary mb-3">Lihat Jadwal</a>
@@ -56,7 +62,7 @@
             <p>Tidak ada mata kuliah yang diajar.</p>
         <?php else: ?>
             <ul>
-                <?php foreach ($mata_Kuliah as $mk): ?>
+                <?php foreach ($jadwal_perkuliahan as $mk): ?>
                     <li><?= $mk['kode_mata_kuliah'] ?> - <?= $mk['nama_mata_kuliah'] ?></li>
                 <?php endforeach; ?>
             </ul>

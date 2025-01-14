@@ -232,7 +232,7 @@
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Tambah Mahasiswa</button>
-            <a href="<?= base_url('/dashboard') ?>" class="btn btn-secondary">Kembali ke Jadwal</a>
+            <a href="<?= base_url('/admin/jadwal/index') ?>" class="btn btn-secondary">Kembali ke Jadwal</a>
         </form>
 
         <!-- Kembali Button -->

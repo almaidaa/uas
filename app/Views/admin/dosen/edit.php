@@ -28,7 +28,7 @@
                 <input type="text" class="form-control" id="departemen" name="departemen" value="<?= old('departemen', $dosen['departemen']) ?>">
             </div>
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-            <a href="/dashboard" class="btn btn-secondary">Batal</a>
+            <a href="/admin/dosen/index" class="btn btn-secondary">Batal</a>
         </form>
     </div>
 </html>

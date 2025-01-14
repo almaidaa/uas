@@ -80,28 +80,30 @@ class MahasiswaController extends BaseController
     public function krs()
     {
         $mahasiswaId = session()->get('user_id');
+        $getMahasiswaById = $this->mahasiswaModel->where('user_id', $mahasiswaId)->first();
         $data['krs'] = $this->krsModel
-            ->select('krs.*, jadwal_perkuliahan.*, mata_kuliah.*')
+            ->select('krs.*, jadwal_perkuliahan.*, mata_kuliah.*, dosen.nama as nama_dosen')
             ->join('jadwal_perkuliahan', 'jadwal_perkuliahan.id = krs.jadwal_id')
             ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
-            ->where('krs.mahasiswa_id', $mahasiswaId)
+            ->join('dosen', 'dosen.id = jadwal_perkuliahan.dosen_id')
+            ->where('krs.mahasiswa_id', $getMahasiswaById['id'])
             ->findAll();
-
-        return view('mahasiswa/krs/index', $data);
-    }
+            // dd($data['krs'], $mahasiswaId, $getMahasiswaById['id']);
+            return view('mahasiswa/krs/index', $data);
+        }
 
     public function khs()
     {
         $mahasiswaId = session()->get('user_id');
+        $getMahasiswaById = $this->mahasiswaModel->where('user_id',$mahasiswaId)->first();
         $data['khs'] = $this->krsModel
             ->select('krs.*, jadwal_perkuliahan.*, mata_kuliah.*, dosen.*')
             ->join('jadwal_perkuliahan', 'jadwal_perkuliahan.id = krs.jadwal_id')
             ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
             ->join('dosen', 'dosen.id = jadwal_perkuliahan.dosen_id')
-            ->where('krs.mahasiswa_id', $mahasiswaId)
+            ->where('krs.mahasiswa_id', $getMahasiswaById['id'])
             ->findAll();
-
-            // dd($data);
+            // dd($data['khs'], $mahasiswaId, $getMahasiswaById['id']);
 
         // return view('mahasiswa/khs/dashboard', $data);
 

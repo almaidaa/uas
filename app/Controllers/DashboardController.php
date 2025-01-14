@@ -2,10 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Models\MahasiswaModel;
 use App\Models\DosenModel;
-use App\Models\MataKuliahModel;
 use App\Models\NilaiModel;
+use App\Models\MahasiswaModel;
+use App\Models\MataKuliahModel;
+use App\Controllers\BaseController;
+use App\Models\JadwalPerkuliahanModel;
 
 class DashboardController extends BaseController
 {
@@ -13,7 +15,7 @@ class DashboardController extends BaseController
     protected $dosenModel;
     protected $mataKuliahModel;
     protected $nilaiModel;
-
+    protected $jadwalModel;
 
 
     public function __construct()
@@ -22,6 +24,7 @@ class DashboardController extends BaseController
         $this->dosenModel = new DosenModel();
         $this->mataKuliahModel = new MataKuliahModel();
         $this->nilaiModel = new NilaiModel();
+        $this->jadwalModel = new JadwalPerkuliahanModel();
     }
 
     public function index()
@@ -62,7 +65,7 @@ class DashboardController extends BaseController
         $dosen      = $this->dosenModel->where('user_id', $id)->first();
         $mata_Kuliah = $this->dosenModel->getMataKuliahByDosen($dosen['user_id']);
         // dd($mataKuliah);
-
+        $jadwal = $this->jadwalModel->getJadwalByDosen($dosen['id']);
         if (!$dosen) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Dosen tidak ditemukan');
         }
@@ -71,6 +74,7 @@ class DashboardController extends BaseController
             'title' => 'Detail Dosen',
             'dosen' => $dosen,
             'mata_Kuliah' => $mata_Kuliah,
+            'jadwal_perkuliahan' => $jadwal
         ];
 
         return view('dosen/dashboard', $data);

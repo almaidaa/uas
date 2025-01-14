@@ -33,7 +33,7 @@
                 <input type="number" class="form-control" id="angkatan" name="angkatan" value="<?= $mahasiswa['angkatan'] ?>" required>
             </div>
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-            <a href="/dashboard" class="btn btn-secondary">Batal</a>
+            <a href="/admin/mahasiswa/mahasiswa" class="btn btn-secondary">Batal</a>
         </form>
     </div>
 </body>

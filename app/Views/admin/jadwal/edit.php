@@ -124,7 +124,7 @@
             <input type="text" name="idnya" value="<?= esc($jadwal['id']) ?>" hidden>
             <div class="mb-3">
                 <label for="mata_kuliah_id" class="form-label">Mata Kuliah</label>
-                <select name="mata_kuliah_id" class="form-control" required>
+                <select name="mata_kuliah_id" class="form-control" required disabled>
                     <option value="">Pilih Mata Kuliah</option>
                     <?php foreach ($mata_kuliah as $mk): ?>
                         <option value="<?= $mk['id'] ?>" <?= isset($jadwal['id']) && $jadwal['mata_kuliah_id'] == $mk['id'] ? 'selected' : '' ?>><?= esc($mk['nama_mk']) ?></option>
@@ -172,7 +172,7 @@
 
             <div class="mb-3">
                 <label for="semester" class="form-label">Semester</label>
-                <select name="semester" class="form-control" required>
+                <select name="semester" class="form-control" required disabled>
                     <?php for ($i = 1; $i <= 8; $i++): ?>
                         <option value="<?= $i ?>" 
                         <?= isset($jadwal['semester']) && $jadwal['semester'] == $i ? 'selected' : '' ?>>
@@ -183,7 +183,7 @@
             </div>
 
             <button type="submit" class="btn btn-success">Simpan</button>
-            <a href="<?= base_url('/dashboard') ?>" class="btn btn-secondary">Kembali</>
+            <a href="<?= base_url('/admin/jadwal/index') ?>" class="btn btn-secondary">Kembali</>
         </form>
     </div>
 </body>

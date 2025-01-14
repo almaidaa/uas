@@ -63,6 +63,9 @@
     </style>
 </head>
 <body>
+            <div style="text-align: center; margin-top: 20px;">
+                <h3>Selamat Datang, <?= esc(session()->get('username')) ?>!</h3>
+            </div>  
     <!-- Sidebar -->
     <div class="sidebar d-md-block" id="sidebar">
         <h4 class="mb-4">Menu</h4>

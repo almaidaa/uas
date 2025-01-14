@@ -122,10 +122,10 @@
             <?= csrf_field() ?>
             <div class="mb-3">
                 <label for="mata_kuliah_id" class="form-label">Mata Kuliah</label>
-                <select name="mata_kuliah_id" class="form-control" required>
+                <select name="mata_kuliah_id" class="form-control" required id="mata_kuliah_id">
                     <option value="">Pilih Mata Kuliah</option>
                     <?php foreach ($mata_kuliah as $mk): ?>
-                        <option value="<?= $mk['id'] ?>"><?= esc($mk['nama_mk']) ?></option>
+                        <option value="<?= $mk['id'] ?>" data-semester="<?= $mk['semester'] ?>"><?= esc($mk['nama_mk']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -162,17 +162,22 @@
 
             <div class="mb-3">
                 <label for="semester" class="form-label">Semester</label>
-                <select name="semester" class="form-control" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
+                <select name="semester" class="form-control" required disabled id="semester">
+                    <option value="">Semester</option>
                 </select>
             </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const selectMataKuliah = document.getElementById('mata_kuliah_id');
+                    const selectSemester = document.getElementById('semester');
+
+                    selectMataKuliah.addEventListener('change', function() {
+                        const semester = this.options[this.selectedIndex].getAttribute('data-semester');
+                        selectSemester.innerHTML = `<option value="${semester}">${semester}</option>`;
+                    });
+                });
+            </script>
 
             <button type="submit" class="btn btn-success">Simpan</button>
             <a href="<?= base_url('/dashboard') ?>" class="btn btn-secondary">Kembali</>

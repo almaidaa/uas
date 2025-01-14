@@ -34,6 +34,10 @@
 </head>
 
 <body>
+<div style="display: flex; justify-content: center; align-items: center;">
+        <h1 style="margin: 20px;">Selamat Datang, <?= $mahasiswa['nama'] ?>!</h1>
+    </div>
+
     <div class="container mt-5">
         <h1>Data Mahasiswa</h1>
         <a href="mahasiswa/krs/index" class="btn btn-primary mb-3">KRS</a>

@@ -75,11 +75,12 @@ class DosenModel extends Model
     public function getMataKuliahByDosen($dosenId)
     {
         // dd($dosenId);
-        return $this->db->table('mata_kuliah')
-            ->select('mata_kuliah.nama_mk as nama_mata_kuliah, mata_kuliah.kode_mk as kode_mata_kuliah')
-            ->where('mata_kuliah.dosen_id', $dosenId)
+        return $this->db->table('jadwal_perkuliahan')
+            ->select('mata_kuliah.*',  'jadwal_perkuliahan.*')
+            ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
+            // ->join('dosen', 'dosen.id = jadwal_perkuliahan.dosen_id')
             ->get()
             ->getResultArray();
-         dd($dosenId);
+        //  dd($dosenId);
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\MahasiswaModel;
+use App\Models\DosenModel;
 
 class AuthController extends BaseController
 {
@@ -15,32 +17,28 @@ class AuthController extends BaseController
     public function processLogin()
     {
         $userModel = new UserModel();
+        $mahasiswaModel = new MahasiswaModel();
+        $dosenModel = new DosenModel();
 
-        // Ambil data input
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
 
-        // Cari pengguna berdasarkan username
         $user = $userModel->where('username', $username)->first();
+        $mahasiswa = $mahasiswaModel->where('user_id', $user['id'])->first();
+        $dosen = $dosenModel->where('user_id', $user['id'])->first();
 
-        if ($user) {
-            // Verifikasi password secara langsung
-            if (password_verify($this->request->getVar('password'), $user['password'])) { //untuk hash password
-                // if ($password === $user['password']) {
-                // Set session
-                session()->set([
-                    'user_id' => $user['id'],
-                    'username' => $user['username'],
-                    'role' => $user['role'],
-                    'logged_in' => true,
-                ]);
-                return redirect()->to('/dashboard');
-            } else {
-                return redirect()->back()->with('error', 'Password salah!');
-            }
-        } else {
-            return redirect()->back()->with('error', 'Username tidak ditemukan!');
+        if ($user && ($mahasiswa || $dosen) || $user['role']=='admin' && password_verify($password, $user['password'])) {
+            session()->set([
+                'user_id' => $user['id'],
+                'username' => $user['username'],
+                'role' => $user['role'],
+                'logged_in' => true,
+            ]);
+
+            return redirect()->to('/dashboard')->with('success', 'Selamat datang ' . ($mahasiswa ? $mahasiswa['nama'] : ($dosen ? $dosen['nama'] : $user['username'])));
         }
+
+        return redirect()->back()->with('error', 'Username atau Password salah!');
     }
 
     public function logout()

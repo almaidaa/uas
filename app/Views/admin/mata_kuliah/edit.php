@@ -132,8 +132,22 @@
                 <label for="sks" class="form-label">SKS</label>
                 <input type="number" name="sks" class="form-control" id="sks" value="<?= $mata_kuliah['sks'] ?>" required>
             </div>
+            <div class="mb-3">
+                <label for="semester" class="form-label">Semester</label>
+                <select name="semester" id="semester" class="form-control" required>
+                    <option value="" disabled selected>Pilih Semester</option>
+                    <option value="1" <?= $mata_kuliah['semester'] == 1 ? 'selected' : '' ?>>1</option>
+                    <option value="2" <?= $mata_kuliah['semester'] == 2 ? 'selected' : '' ?>>2</option>
+                    <option value="3" <?= $mata_kuliah['semester'] == 3 ? 'selected' : '' ?>>3</option>
+                    <option value="4" <?= $mata_kuliah['semester'] == 4 ? 'selected' : '' ?>>4</option>
+                    <option value="5" <?= $mata_kuliah['semester'] == 5 ? 'selected' : '' ?>>5</option>
+                    <option value="6" <?= $mata_kuliah['semester'] == 6 ? 'selected' : '' ?>>6</option>
+                    <option value="7" <?= $mata_kuliah['semester'] == 7 ? 'selected' : '' ?>>7</option>
+                    <option value="8" <?= $mata_kuliah['semester'] == 8 ? 'selected' : '' ?>>8</option>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-            <a href="/dashboard" class="btn btn-secondary">Batal</a>
+            <a href="/admin/mata_kuliah/index" class="btn btn-secondary">Batal</a>
         </form>
     </div>
 </body>
