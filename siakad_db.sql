@@ -14,41 +14,157 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
--- Dumping data for table siakad_db.dosen: ~4 rows (approximately)
+
+-- Dumping database structure for siakad_db
+DROP DATABASE IF EXISTS `siakad_db`;
+CREATE DATABASE IF NOT EXISTS `siakad_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `siakad_db`;
+
+-- Dumping structure for table siakad_db.dosen
+DROP TABLE IF EXISTS `dosen`;
+CREATE TABLE IF NOT EXISTS `dosen` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `nip` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `departemen` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `dosen_user_id_foreign` (`user_id`),
+  KEY `nip` (`nip`),
+  CONSTRAINT `dosen_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table siakad_db.dosen: ~2 rows (approximately)
 DELETE FROM `dosen`;
 INSERT INTO `dosen` (`id`, `user_id`, `nip`, `nama`, `departemen`, `created_at`, `updated_at`) VALUES
-	(3, 4, '10019', 'siska', 'FK Informatika', '2025-01-03 08:15:32', '2025-01-09 08:49:03'),
-	(5, 6, '1009', 'Tubagus', 'Fakultas Kedokteran', '2025-01-06 06:06:51', '2025-01-06 06:06:51'),
-	(6, 7, '0019', 'piwit', 'apa aja', '2025-01-06 06:50:12', '2025-01-06 06:50:12'),
-	(7, 8, '21425', 'vfbfdfd', 'gdgfdgd', '2025-01-06 08:49:09', '2025-01-06 08:49:09');
+	(3, 4, '10019', 'siska', 'Informatika', '2025-01-03 08:15:32', '2025-01-13 00:24:29'),
+	(5, 6, '1009', 'Tubagus', 'Fakultas Kedokteran', '2025-01-06 06:06:51', '2025-01-06 06:06:51');
 
--- Dumping data for table siakad_db.jadwal_perkuliahan: ~2 rows (approximately)
+-- Dumping structure for table siakad_db.jadwal_perkuliahan
+DROP TABLE IF EXISTS `jadwal_perkuliahan`;
+CREATE TABLE IF NOT EXISTS `jadwal_perkuliahan` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `mata_kuliah_id` int NOT NULL,
+  `dosen_id` int NOT NULL,
+  `hari` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `jam_mulai` time NOT NULL,
+  `jam_selesai` time NOT NULL,
+  `ruangan` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `semester` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mata_kuliah_id` (`mata_kuliah_id`),
+  KEY `dosen_id` (`dosen_id`),
+  CONSTRAINT `FK_jadwal_perkuliahan_mata_kuliah` FOREIGN KEY (`mata_kuliah_id`) REFERENCES `mata_kuliah` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table siakad_db.jadwal_perkuliahan: ~1 rows (approximately)
 DELETE FROM `jadwal_perkuliahan`;
 INSERT INTO `jadwal_perkuliahan` (`id`, `mata_kuliah_id`, `dosen_id`, `hari`, `jam_mulai`, `jam_selesai`, `ruangan`, `created_at`, `updated_at`, `semester`) VALUES
-	(12, 17, 3, 'Senin', '08:48:00', '09:50:00', 'A1', '2025-01-09 01:48:20', '2025-01-09 01:48:20', '1'),
-	(13, 18, 5, 'Senin', '08:50:00', '20:50:00', 'Private', '2025-01-09 01:51:05', '2025-01-09 01:51:05', '1');
+	(15, 17, 3, 'Senin', '07:30:00', '08:30:00', 'Private', '2025-01-13 08:32:51', '2025-01-13 08:32:51', '3'),
+	(16, 18, 3, 'Selasa', '16:00:00', '17:00:00', 'Private', '2025-01-13 09:10:55', '2025-01-13 09:10:55', '6');
+
+-- Dumping structure for table siakad_db.khs
+DROP TABLE IF EXISTS `khs`;
+CREATE TABLE IF NOT EXISTS `khs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `mahasiswa_id` int NOT NULL,
+  `mata_kuliah_id` int NOT NULL,
+  `nilai` decimal(5,2) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_khs_mahasiswa` (`mahasiswa_id`),
+  KEY `FK_khs_mata_kuliah` (`mata_kuliah_id`),
+  CONSTRAINT `FK_khs_mahasiswa` FOREIGN KEY (`mahasiswa_id`) REFERENCES `mahasiswa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_khs_mata_kuliah` FOREIGN KEY (`mata_kuliah_id`) REFERENCES `mata_kuliah` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table siakad_db.khs: ~0 rows (approximately)
 DELETE FROM `khs`;
 
--- Dumping data for table siakad_db.krs: ~3 rows (approximately)
+-- Dumping structure for table siakad_db.krs
+DROP TABLE IF EXISTS `krs`;
+CREATE TABLE IF NOT EXISTS `krs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `mahasiswa_id` int NOT NULL,
+  `mata_kuliah_id` int NOT NULL,
+  `semester` int NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `jadwal_id` int DEFAULT NULL,
+  `nilai` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mahasiswa_id` (`mahasiswa_id`),
+  KEY `mata_kuliah_id` (`mata_kuliah_id`),
+  CONSTRAINT `FK_krs_mahasiswa` FOREIGN KEY (`mahasiswa_id`) REFERENCES `mahasiswa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table siakad_db.krs: ~1 rows (approximately)
 DELETE FROM `krs`;
 INSERT INTO `krs` (`id`, `mahasiswa_id`, `mata_kuliah_id`, `semester`, `created_at`, `updated_at`, `jadwal_id`, `nilai`) VALUES
-	(1, 10, 18, 3, '2025-01-09 02:22:52', '2025-01-09 02:22:52', 13, 'A'),
-	(2, 10, 17, 1, '2025-01-10 02:01:21', '2025-01-10 02:02:05', 12, 'A'),
-	(3, 14, 17, 1, '2025-01-10 02:01:24', '2025-01-10 02:02:10', 12, 'C');
+	(6, 17, 17, 1, '2025-01-13 09:10:14', '2025-01-13 09:10:14', 15, NULL);
 
--- Dumping data for table siakad_db.mahasiswa: ~2 rows (approximately)
+-- Dumping structure for table siakad_db.mahasiswa
+DROP TABLE IF EXISTS `mahasiswa`;
+CREATE TABLE IF NOT EXISTS `mahasiswa` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `nim` varchar(15) COLLATE utf8mb4_general_ci NOT NULL,
+  `nama` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `jurusan` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `angkatan` year NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mahasiswa_user_id_foreign` (`user_id`),
+  CONSTRAINT `mahasiswa_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table siakad_db.mahasiswa: ~1 rows (approximately)
 DELETE FROM `mahasiswa`;
 INSERT INTO `mahasiswa` (`id`, `user_id`, `nim`, `nama`, `jurusan`, `angkatan`, `created_at`, `updated_at`) VALUES
-	(10, 10, '33211', 'cobadeh', 'Informatika', '2020', '2025-01-08 02:52:25', '2025-01-09 08:04:30'),
-	(14, 15, '11222009', 'almaida', 'Informatika', '2020', '2025-01-09 08:01:08', '2025-01-09 08:04:20');
+	(17, 18, '112220099', 'almaida', 'Informatikaa', '2021', '2025-01-13 00:23:41', '2025-01-13 00:24:02');
 
--- Dumping data for table siakad_db.mata_kuliah: ~2 rows (approximately)
+-- Dumping structure for table siakad_db.mata_kuliah
+DROP TABLE IF EXISTS `mata_kuliah`;
+CREATE TABLE IF NOT EXISTS `mata_kuliah` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `dosen_id` int DEFAULT NULL,
+  `kode_mk` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
+  `nama_mk` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `sks` int NOT NULL,
+  `semester` int NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `kode_mk` (`kode_mk`),
+  KEY `nama_mk` (`nama_mk`),
+  KEY `FK_mata_kuliah_dosen` (`dosen_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table siakad_db.mata_kuliah: ~3 rows (approximately)
 DELETE FROM `mata_kuliah`;
 INSERT INTO `mata_kuliah` (`id`, `dosen_id`, `kode_mk`, `nama_mk`, `sks`, `semester`, `created_at`, `updated_at`) VALUES
 	(17, 4, 'A01', 'Pemograman', 3, 1, '2025-01-08 06:10:54', '2025-01-08 06:10:54'),
-	(18, 6, 'A03', 'Python', 2, 3, '2025-01-09 01:50:27', '2025-01-09 01:50:27');
+	(18, 6, 'A03', 'Python', 2, 3, '2025-01-09 01:50:27', '2025-01-09 01:50:27'),
+	(19, 6, 'ABC1', 'Data Mining', 3, 1, '2025-01-13 00:43:26', '2025-01-13 00:43:26');
+
+-- Dumping structure for table siakad_db.migrations
+DROP TABLE IF EXISTS `migrations`;
+CREATE TABLE IF NOT EXISTS `migrations` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `version` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `class` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `group` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `namespace` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `time` int NOT NULL,
+  `batch` int unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table siakad_db.migrations: ~13 rows (approximately)
 DELETE FROM `migrations`;
@@ -67,13 +183,59 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 	(12, '2025-01-07-020540', 'App\\Database\\Migrations\\AddKHStable', 'default', 'App', 1736215922, 11),
 	(13, '2025-01-09-013146', 'App\\Database\\Migrations\\AddSemestertoJadwalPerkuliahan', 'default', 'App', 1736386491, 12);
 
+-- Dumping structure for table siakad_db.nilai
+DROP TABLE IF EXISTS `nilai`;
+CREATE TABLE IF NOT EXISTS `nilai` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `mahasiswa_id` int NOT NULL,
+  `mata_kuliah_id` int NOT NULL,
+  `dosen_id` int NOT NULL,
+  `nilai` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_nilai_krs_2` (`mata_kuliah_id`),
+  KEY `FK_nilai_krs` (`mahasiswa_id`),
+  KEY `FK_nilai_dosen` (`dosen_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- Dumping data for table siakad_db.nilai: ~0 rows (approximately)
 DELETE FROM `nilai`;
+
+-- Dumping structure for table siakad_db.nilai_mahasiswa
+DROP TABLE IF EXISTS `nilai_mahasiswa`;
+CREATE TABLE IF NOT EXISTS `nilai_mahasiswa` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `mahasiswa_id` int NOT NULL,
+  `mata_kuliah_id` int NOT NULL,
+  `semester` int NOT NULL,
+  `nilai` decimal(5,2) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mahasiswa_id` (`mahasiswa_id`),
+  KEY `mata_kuliah_id` (`mata_kuliah_id`),
+  CONSTRAINT `FK_nilai_mahasiswa_mahasiswa` FOREIGN KEY (`mahasiswa_id`) REFERENCES `mahasiswa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_nilai_mahasiswa_mata_kuliah` FOREIGN KEY (`mata_kuliah_id`) REFERENCES `mata_kuliah` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table siakad_db.nilai_mahasiswa: ~0 rows (approximately)
 DELETE FROM `nilai_mahasiswa`;
 
--- Dumping data for table siakad_db.users: ~10 rows (approximately)
+-- Dumping structure for table siakad_db.users
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `role` enum('admin','dosen','mahasiswa') COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table siakad_db.users: ~11 rows (approximately)
 DELETE FROM `users`;
 INSERT INTO `users` (`id`, `username`, `password`, `role`, `created_at`, `updated_at`) VALUES
 	(1, 'admin', 'Admin123', 'admin', '2025-01-03 07:31:12', '2025-01-03 07:31:14'),
@@ -85,7 +247,8 @@ INSERT INTO `users` (`id`, `username`, `password`, `role`, `created_at`, `update
 	(8, '21425', '$2y$10$PhV2re80z3hqz1MYXYa7RuiQ8ZjfK2u0Ai6MASORqZM0CvLYsclaS', 'dosen', '2025-01-06 08:49:09', '2025-01-06 08:49:09'),
 	(10, '33211', '$2y$10$2QGzaABNolW6tsmtojAtt.a2nfmdJa5Lgw51C3eYGpI4RjP1SnO52', 'mahasiswa', '2025-01-08 02:52:25', '2025-01-08 02:52:25'),
 	(11, '113568', '$2y$10$V3tb.OBEhSO0he1hgUXyq.SiCjz93cUvX8FPnEq2OcQ.moPpA8U6e', 'dosen', '2025-01-08 02:58:13', '2025-01-08 02:58:13'),
-	(15, '11222009', '$2y$10$oTSMsGTWwM/QtRSyx8Z.HueTL/bnvAVzGEergtzjQE/bk.9Ml/ln.', 'mahasiswa', '2025-01-09 08:01:08', '2025-01-09 08:01:08');
+	(15, '11222009', '$2y$10$oTSMsGTWwM/QtRSyx8Z.HueTL/bnvAVzGEergtzjQE/bk.9Ml/ln.', 'mahasiswa', '2025-01-09 08:01:08', '2025-01-09 08:01:08'),
+	(18, '112220099', '$2y$10$qbSl9wsukLmgkQN8adCUwOvMxLSB5WDi9ebRqoNeuA.vtnFCr/n8q', 'mahasiswa', '2025-01-13 00:23:41', '2025-01-13 00:23:41');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
