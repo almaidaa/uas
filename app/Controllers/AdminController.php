@@ -356,7 +356,7 @@ class AdminController extends BaseController
     public function manageJadwal()
     {
         $data['jadwal'] = $this->jadwalModel
-            ->select('jadwal_perkuliahan.*, mata_kuliah.nama_mk, dosen.nama as dosen')
+            ->select('jadwal_perkuliahan.*, mata_kuliah.nama_mk, mata_kuliah.semester, dosen.nama as dosen')
             ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
             ->join('dosen', 'dosen.id = jadwal_perkuliahan.dosen_id')
             ->findAll();
