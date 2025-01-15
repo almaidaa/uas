@@ -7,56 +7,50 @@
     <title>Login - Web Kampus</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(to bottom right, #4a69bd, #6a89cc);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+       .gradient-custom {
+           /* fallback for old browsers */
+           background-image: url("/img/bg-univ.jpg");
+           background-size: cover;
+           background-position: center;
+           position: relative;
+       }
 
-        .login-container {
-            background: #fff;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            padding: 30px;
-            color: #333;
-        }
+       .gradient-custom::before {
+           content: "";
+           position: absolute;
+           top: 0;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           background-image: linear-gradient(to right, rgba(106, 17, 203, 0.5), rgba(106, 17, 203, 0.5));
+           backdrop-filter: blur(50px);
+           z-index: 1;
+       }
 
-        .login-container h3 {
-            margin-bottom: 20px;
-        }
+       .gradient-custom > * {
+           position: relative;
+           z-index: 2;
+       }
 
-        .campus-logo {
-            display: block;
-            margin: 0 auto 20px auto;
-            width: 100px;
-        }
-
-        .btn-primary {
-            background-color: #4a69bd;
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #3b5998;
-        }
-
-        .form-control:focus {
-            border-color: #4a69bd;
-            box-shadow: 0 0 5px rgba(74, 105, 189, 0.5);
-        }
+       .shadow-custom {
+        -webkit-box-shadow: -4px 1px 19px 7px rgba(143,39,143,1);
+-moz-box-shadow: -4px 1px 19px 7px rgba(143,39,143,1);
+box-shadow: -4px 1px 19px 7px rgba(143,39,143,1);
+       }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="login-container">
-                    <img src="/img/unsera.png" alt="Logo Kampus" class="campus-logo">
-                    <h3 class="text-center">Universitas Kelompok 2 <br></h3>
+<section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white shadow-custom " style="border-radius: 1rem;">
+                <div class="card-body p-5 text-center">
+                <div class="mb-md-5 mt-md-4 pb-5">
+                    <!-- <img src="/img/unsera.png" alt="Logo Kampus" class="campus-logo"> -->
+                    <h3 class="fw-bold mb-2 text-uppercase">Universitas Kelompok 2 <br></h3>
+                    <p class="text-white-50 mb-5">Please enter your login and password!</p>
                     <?php if (session()->getFlashdata('error')): ?>
                         <div class="alert alert-danger">
                             <?= session()->getFlashdata('error') ?>
@@ -64,23 +58,26 @@
                     <?php endif; ?>
                     <form action="/login/process" method="post" autocomplete="on">
                         <?= csrf_field() ?>
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
+                        <div data-mdb-input-init class="form-outline form-white mb-4">
                             <input type="text" name="username" class="form-control" id="username" required>
+                            <label class="form-label" for="username">Username</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
+                        <div data-mdb-input-init class="form-outline form-white mb-4">
                             <input type="password" name="password" class="form-control" id="password" required>
+                            <label class="form-label" for="password">Password</label>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                        <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5">Login</button>
                     </form>
                     <!-- <div class="text-center mt-3">
                         <small>Belum punya akun? <a href="/register" class="text-primary">Daftar di sini</a></small>
                     </div> -->
                 </div>
+                </div>
+                </div>
             </div>
         </div>
     </div>
+</section>
 </body>
 
 </html>

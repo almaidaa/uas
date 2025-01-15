@@ -124,15 +124,33 @@
                 <label for="kode_mk" class="form-label">Kode MK</label>
                 <input type="text" name="kode_mk" class="form-control" id="kode_mk" value="<?= $mata_kuliah['kode_mk'] ?>" required disabled>
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="nama_mk" class="form-label">Nama MK</label>
                 <input type="text" name="nama_mk" class="form-control" id="nama_mk" value="<?= $mata_kuliah['nama_mk'] ?>" required>
-            </div>
+            </div> -->
             <div class="mb-3">
+                <label for="nama_mk" class="form-label" style="font-weight: bold; color: black;">Nama Mata Kuliah</label>
+                <select name="nama_mk" class="form-control" id="nama_mk" required style="font-weight: bold;">
+                    <option value="">Pilih Mata Kuliah</option>
+                    <option value="Python" <?= $mata_kuliah['nama_mk'] == 'Python' ? 'selected' : '' ?>>Python</option>
+                    <option value="Pemograman Web" <?= $mata_kuliah['nama_mk'] == 'Pemograman Web' ? 'selected' : '' ?>>Pemograman Web</option>
+                    <option value="Data Mining" <?= $mata_kuliah['nama_mk'] == 'Data Mining' ? 'selected' : '' ?>>Data Mining</option>
+                </select>
+            </div>
+            <!-- <div class="mb-3">
                 <label for="sks" class="form-label">SKS</label>
                 <input type="number" name="sks" class="form-control" id="sks" value="<?= $mata_kuliah['sks'] ?>" required>
-            </div>
+            </div> -->
             <div class="mb-3">
+                <label for="sks" class="form-label" style="font-weight: bold; color: black;">SKS</label>
+                <select name="sks" class="form-control" id="sks" required style="font-weight: bold;">
+                    <option value="">Pilih SKS</option>
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <option value="<?= $i ?>" <?= $mata_kuliah['sks'] == $i ? 'selected' : '' ?>><?= $i ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+            <!-- <div class="mb-3">
                 <label for="semester" class="form-label">Semester</label>
                 <select name="semester" id="semester" class="form-control" required>
                     <option value="" disabled selected>Pilih Semester</option>
@@ -144,6 +162,15 @@
                     <option value="6" <?= $mata_kuliah['semester'] == 6 ? 'selected' : '' ?>>6</option>
                     <option value="7" <?= $mata_kuliah['semester'] == 7 ? 'selected' : '' ?>>7</option>
                     <option value="8" <?= $mata_kuliah['semester'] == 8 ? 'selected' : '' ?>>8</option>
+                </select>
+            </div> -->
+            <div class="mb-3">
+                <label for="semester" class="form-label" style="font-weight: bold; color: black;">Semester</label>
+                <select name="semester" class="form-control" id="semester" required style="font-weight: bold;">
+                    <option value="">Pilih Semester</option>
+                    <?php for ($i = 1; $i <= 14; $i++): ?>
+                        <option value="<?= $i ?>" <?= $mata_kuliah['semester'] == $i ? 'selected' : '' ?>><?= $i ?></option>
+                    <?php endfor; ?>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>

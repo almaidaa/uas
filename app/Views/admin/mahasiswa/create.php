@@ -7,14 +7,14 @@
     <title>Tambah Mahasiswa</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Body styling */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
+            background: url("/img/bg-univ.jpg") no-repeat center center fixed;
+           background-size: cover;
+           position: relative;
             color: #333;
         }
 
-        /* Main container styling */
         .container {
             background-color: #fff;
             border-radius: 15px;
@@ -25,7 +25,6 @@
             text-align: center;
         }
 
-        /* Title styling */
         h1 {
             font-size: 36px;
             color: #34495e;
@@ -33,13 +32,11 @@
             margin-bottom: 30px;
         }
 
-        /* Form labels styling */
         .form-label {
             font-weight: 600;
             color: #34495e;
         }
 
-        /* Form input fields */
         .form-control {
             border-radius: 10px;
             padding: 14px;
@@ -54,7 +51,6 @@
             box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
         }
 
-        /* Button styling */
         .btn-success {
             background-color: #2ecc71;
             border-color: #2ecc71;
@@ -87,34 +83,20 @@
             cursor: pointer;
         }
 
-        /* Responsive design adjustments */
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
-            }
-
-            h1 {
-                font-size: 32px;
-            }
-
-            .btn-success {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
-            }
-
-            .btn-secondary {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
-            }
+        .alert {
+            margin-top: 20px;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #dfe4ea;
+            background-color: #f1f4f8;
+            color: #e74c3c;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- Flash error message if there are any -->
+    <div class="container" style="background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(20px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);">
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger" role="alert">
                 <?= session()->getFlashdata('error') ?>
@@ -122,30 +104,41 @@
         <?php endif; ?>
         
         <!-- Title -->
-        <h1>Tambah Mahasiswa</h1>
+        <h1 style="text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3); font-weight: bold;">Tambah Mahasiswa</h1>
         
         <!-- Form to add a new student -->
         <form action="mahasiswa/store" method="post">
             <?= csrf_field() ?>
             
             <div class="mb-3">
-                <label for="nim" class="form-label">NIM</label>
-                <input type="text" name="nim" class="form-control" id="nim" required>
+                <label for="nim" class="form-label" style="font-weight: bold; text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);">NIM</label>
+                <input type="text" name="nim" class="form-control" id="nim" required style="font-weight: bold;">
             </div>
 
             <div class="mb-3">
-                <label for="nama" class="form-label">Nama</label>
-                <input type="text" name="nama" class="form-control" id="nama" required>
+                <label for="nama" class="form-label" style="font-weight: bold; text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);">Nama</label>
+                <input type="text" name="nama" class="form-control" id="nama" required style="font-weight: bold;">
             </div>
 
             <div class="mb-3">
-                <label for="jurusan" class="form-label">Jurusan</label>
-                <input type="text" name="jurusan" class="form-control" id="jurusan" required>
+                <label for="jurusan" class="form-label" style="font-weight: bold; text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);">Jurusan</label>
+                <select name="jurusan" class="form-control" id="jurusan" required style="font-weight: bold;">
+                    <option value="" disabled selected>Pilih Jurusan</option>
+                    <option value="Teknik Informatika">Teknik Informatika</option>
+                    <option value="Sistem Informasi">Sistem Informasi</option>
+                    <option value="Teknik Elektro">Teknik Elektro</option>
+                    <option value="Manajemen">Manajemen</option>
+                </select>
             </div>
 
             <div class="mb-3">
-                <label for="angkatan" class="form-label">Angkatan</label>
-                <input type="number" name="angkatan" class="form-control" id="angkatan" required>
+                <label for="angkatan" class="form-label" style="font-weight: bold; text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);">Angkatan</label>
+                <?php $years = range(date('Y'), date('Y') + 10); ?>
+                <select name="angkatan" class="form-control" id="angkatan" required style="font-weight: bold;">
+                    <?php foreach ($years as $year): ?>
+                        <option value="<?= $year ?>" <?= old('angkatan') == $year ? 'selected' : '' ?>><?= $year ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <button type="submit" class="btn btn-success">Simpan</button>
             <a href="<?= base_url('/dashboard') ?>" class="btn btn-secondary">Kembali</a>

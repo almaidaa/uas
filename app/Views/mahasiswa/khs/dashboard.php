@@ -48,7 +48,7 @@
         </a>
         
         <button onclick="window.print();" class="btn btn-primary noPrint mt-3">
-            Print Me
+            Cetak KHS
         </button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

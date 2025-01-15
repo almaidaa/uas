@@ -6,13 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah MK</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    
     <style>
         /* General page styling */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #495057;
-        }
 
         .container {
             max-width: 700px;
@@ -101,36 +98,51 @@
     </style>
 </head>
 
-<body>
-    <div class="container">
-        <h1>Tambah MK</h1>
-        <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert alert-success" role="alert">
-                <?= session()->getFlashdata('success') ?>
-            </div>
-        <?php endif; ?>
-        <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert alert-danger" role="alert">
-                <?= session()->getFlashdata('error') ?>
-            </div>
-        <?php endif; ?>
+<body class="gradient-custom">
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success" role="alert">
+            <?= session()->getFlashdata('success') ?>
+        </div>
+    <?php endif; ?>
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger" role="alert">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
+    <div class="container-edit">
+        <h1 style="font-family: 'Lobster', cursive; font-weight: 700; color: black; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">Tambah Mata Kuliah</h1>
         <form action="index/store" method="post">
             <?= csrf_field() ?>
             <div class="mb-3">
-                <label for="kode_mk" class="form-label">Kode Mata Kuliah</label>
-                <input type="text" name="kode_mk" class="form-control" id="kode_mk" required>
+                <label for="kode_mk" class="form-label" style="font-weight: bold; color: black;">Kode Mata Kuliah</label>
+                <input type="text" name="kode_mk" class="form-control" id="kode_mk" required style="font-weight: bold;" maxlength="5">
             </div>
             <div class="mb-3">
-                <label for="nama_mk" class="form-label">Nama Mata Kuliah</label>
-                <input type="text" name="nama_mk" class="form-control" id="nama_mk" required>
+                <label for="nama_mk" class="form-label" style="font-weight: bold; color: black;">Nama Mata Kuliah</label>
+                <select name="nama_mk" class="form-control" id="nama_mk" required style="font-weight: bold;">
+                    <option value="">Pilih Mata Kuliah</option>
+                    <option value="Python">Python</option>
+                    <option value="Pemohrograman Web">Pemograman Web</option>
+                    <option value="Data Mining">Data Mining</option>
+                </select>
             </div>
             <div class="mb-3">
-                <label for="sks" class="form-label">SKS</label>
-                <input type="text" name="sks" class="form-control" id="sks" required>
+                <label for="sks" class="form-label" style="font-weight: bold; color: black;">SKS</label>
+                <select name="sks" class="form-control" id="sks" required style="font-weight: bold;">
+                    <option value="">Pilih SKS</option>
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <option value="<?= $i ?>"><?= $i ?></option>
+                    <?php endfor; ?>
+                </select>
             </div>
             <div class="mb-3">
-                <label for="semester" class="form-label">Semester</label>
-                <input type="text" name="semester" class="form-control" id="semester" required>
+                <label for="semester" class="form-label" style="font-weight: bold; color: black;">Semester</label>
+                <select name="semester" class="form-control" id="semester" required style="font-weight: bold;">
+                    <option value="">Pilih Semester</option>
+                    <?php for ($i = 1; $i <= 14; $i++): ?>
+                        <option value="<?= $i ?>"><?= $i ?></option>
+                    <?php endfor; ?>
+                </select>
             </div>
             <button type="submit" class="btn btn-primary">Simpan</button>
             <a href="/admin/mata_kuliah/index" class="btn btn-secondary">Batal</a>

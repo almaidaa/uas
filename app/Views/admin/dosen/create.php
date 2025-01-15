@@ -6,23 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Dosen</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Styling for the page */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-        }
-
-        .container {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin-top: 50px;
-            max-width: 600px;
-            text-align: center;
-        }
 
         h1 {
             font-size: 36px;
@@ -106,8 +91,24 @@
     </style>
 </head>
 
-<body>
-    <div class="container">
+<body class="gradient-custom">
+    
+    <!-- Display success message if available -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success" role="alert">
+            <?= session()->getFlashdata('success') ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Display error message if available -->
+    <?php if (session()->getFlashdata('failed')): ?>
+        <div class="alert alert-danger" role="alert">
+            <?= session()->getFlashdata('failed') ?>
+        </div>
+    <?php endif; ?>
+
+    
+    <div class="container-edit">
         <!-- Display error messages if available -->
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger" role="alert">
@@ -116,7 +117,7 @@
         <?php endif; ?>
         
         <!-- Title -->
-        <h1>Tambah Dosen</h1>
+        <h1 style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Tambah Dosen</h1>
         
         <!-- Dosen Form -->
         <form action="index/store" method="post">
@@ -124,7 +125,7 @@
             
             <div class="mb-3">
                 <label for="nip" class="form-label">NIP</label>
-                <input type="text" class="form-control <?= session('validation.nip') ? 'is-invalid' : '' ?>" id="nip" name="nip" value="<?= old('nip') ?>" required>
+                <input type="text" class="form-control <?= session('validation.nip') ? 'is-invalid' : '' ?>" id="nip" name="nip" value="<?= old('nip') ?>" required minlength="12" maxlength="12">
                 <div class="invalid-feedback">
                     <?= session('validation.nip') ?>
                 </div>
@@ -140,7 +141,12 @@
 
             <div class="mb-3">
                 <label for="departemen" class="form-label">Departemen</label>
-                <textarea class="form-control <?= session('validation.departemen') ? 'is-invalid' : '' ?>" id="departemen" name="departemen" required><?= old('departemen') ?></textarea>
+                <select class="form-control <?= session('validation.departemen') ? 'is-invalid' : '' ?>" id="departemen" name="departemen" required>
+                    <option value="" disabled selected>Pilih Departemen</option>
+                    <option value="Informatika" <?= old('departemen') == 'Informatika' ? 'selected' : '' ?>>Informatika</option>
+                    <option value="Elektro" <?= old('departemen') == 'Elektro' ? 'selected' : '' ?>>Elektro</option>
+                    <option value="Sipil" <?= old('departemen') == 'Sipil' ? 'selected' : '' ?>>Sipil</option>
+                </select>
                 <div class="invalid-feedback">
                     <?= session('validation.departemen') ?>
                 </div>
@@ -148,7 +154,7 @@
 
             
             <button type="submit" class="btn btn-success">Simpan</button>
-            <a href="<?= base_url('/dashboard') ?>" class="btn btn-secondary">Kembali</a>
+            <a href="<?= base_url('/admin/dosen/index') ?>" class="btn btn-secondary">Kembali</a>
         </form>
     </div>
 </body>
