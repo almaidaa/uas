@@ -13,7 +13,6 @@ class AuthController extends BaseController
         return view('auth/login');
     }
 
-
     public function processLogin()
     {
         $userModel = new UserModel();
@@ -24,10 +23,15 @@ class AuthController extends BaseController
         $password = $this->request->getPost('password');
 
         $user = $userModel->where('username', $username)->first();
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Username tidak ditemukan!');
+        }
+
         $mahasiswa = $mahasiswaModel->where('user_id', $user['id'])->first();
         $dosen = $dosenModel->where('user_id', $user['id'])->first();
 
-        if ($user && ($mahasiswa || $dosen) || $user['role']=='admin' && password_verify($password, $user['password'])) {
+        if (($mahasiswa || $dosen || $user['role'] == 'admin') && password_verify($password, $user['password'])) {
             session()->set([
                 'user_id' => $user['id'],
                 'username' => $user['username'],
@@ -47,3 +51,4 @@ class AuthController extends BaseController
         return redirect()->to('/login');
     }
 }
+

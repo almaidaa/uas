@@ -7,15 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Jadwal Perkuliahan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Body and general page styling */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
 
         /* Container with a fresh layout */
         .container {
@@ -116,9 +109,9 @@
     </style>
 </head>
 
-<body>
+<body class="gradient-custom">
     <div class="container">
-        <h1>Edit Jadwal Perkuliahan</h1>
+        <h1 style="font-family: 'Roboto', sans-serif; font-size: 36px; font-weight: 700; color: #34495e;">Edit Jadwal Perkuliahan</h1>
         <form action="/admin/jadwal/update" method="post">
             <?= csrf_field() ?>
             <input type="text" name="idnya" value="<?= esc($jadwal['id']) ?>" hidden>
@@ -147,13 +140,26 @@
                 <select name="hari" class="form-control" required>
                     <option value="">Pilih Hari</option>
                     <?php 
-                    $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+                    $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                     foreach ($days as $day): 
                     ?>
                         <option value="<?= $day ?>" <?= isset($jadwal['hari']) && $jadwal['hari'] == $day ? 'selected' : '' ?>><?= $day ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
+
+            <!-- <div class="mb-3">
+                <label for="hari" class="form-label">Hari</label>
+                <select name="hari" class="form-control" required>
+                    <option value="">Pilih Hari</option>
+                    <option value="Monday">Senin</option>
+                    <option value="Tuesday">Selasa</option>
+                    <option value="Wednesday">Rabu</option>
+                    <option value="Thursday">Kamis</option>
+                    <option value="Friday">Jumat</option>
+                    <option value="Saturday">Sabtu</option>
+                </select>
+            </div> -->
 
             <div class="mb-3">
                 <label for="jam_mulai" class="form-label">Jam Mulai</label>
@@ -165,9 +171,21 @@
                 <input type="time" name="jam_selesai" class="form-control" value="<?= $jadwal['jam_selesai'] ?? '' ?>" required>
             </div>
 
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="ruangan" class="form-label">Ruangan</label>
                 <input type="text" name="ruangan" class="form-control" value="<?= $jadwal['ruangan'] ?? '' ?>" required>
+            </div> -->
+
+            <div class="mb-3">
+                <label for="ruangan" class="form-label">Ruangan</label>
+                <select name="ruangan" class="form-control" required>
+                    <option value="">Pilih Ruangan</option>
+                    <option value="A1" <?= isset($jadwal['ruangan']) && $jadwal['ruangan'] == 'A1' ? 'selected' : '' ?>>A1</option>
+                    <option value="A2" <?= isset($jadwal['ruangan']) && $jadwal['ruangan'] == 'A2' ? 'selected' : '' ?>>A2</option>
+                    <option value="A3" <?= isset($jadwal['ruangan']) && $jadwal['ruangan'] == 'A3' ? 'selected' : '' ?>>A3</option>
+                    <option value="A4" <?= isset($jadwal['ruangan']) && $jadwal['ruangan'] == 'A4' ? 'selected' : '' ?>>A4</option>
+                    <option value="A5" <?= isset($jadwal['ruangan']) && $jadwal['ruangan'] == 'A5' ? 'selected' : '' ?>>A5</option>
+                </select>
             </div>
 
             <div class="mb-3">

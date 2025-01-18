@@ -6,15 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Jadwal Mata Kuliah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Body and general page styling */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #eef2f7;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
 
         /* Container with a fresh layout */
         .container {
@@ -140,55 +133,73 @@
             margin-bottom: 20px;
         }
 
-        /* Responsive design adjustments */
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px;
+        .jadwal-info {
+                margin-bottom: 20px;
             }
 
-            h1 {
-                font-size: 32px;
+            .jadwal-info h2 {
+                font-weight: 700;
+                margin-bottom: 10px;
             }
 
-            h2 {
-                font-size: 26px;
+            .jadwal-info ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
             }
 
-            .btn-primary {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
+            .jadwal-info li {
+                margin-bottom: 10px;
             }
 
-            .btn-secondary {
-                width: 100%;
-                padding: 12px;
-                font-size: 16px;
+            .jadwal-info li strong {
+                font-weight: 700;
             }
-        }
     </style>
 </head>
 
-<body>
+<body class="gradient-custom">
     <div class="container">
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
         <?php endif; ?>
-
         <?php if (session()->getFlashdata('success')): ?>
             <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
         <?php endif; ?>
-        <h1>Detail Jadwal Mata Kuliah</h1>
+        <h1 style="font-family: 'Roboto', sans-serif; color: black; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">Detail Jadwal Mata Kuliah</h1>
 
         <!-- Mata Kuliah Section -->
-        <h2><?= $jadwal['mata_kuliah'] ?></h2>
-        <p><strong>Hari:</strong> <?= $jadwal['hari'] ?></p>
-        <p><strong>Waktu:</strong> <?= $jadwal['jam_mulai'] ?> - <?= $jadwal['jam_selesai'] ?></p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="2"><?= $jadwal['mata_kuliah'] ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Dosen</strong></td>
+                    <td><?= $jadwal['nama'] ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Hari</strong></td>
+                    <td><?= $jadwal['hari'] ?></td>
+                </tr>
+                <tr>
+                    <td><strong>Waktu</strong></td>
+                    <td><?= $jadwal['jam_mulai'] ?> - <?= $jadwal['jam_selesai'] ?></td>
+                </tr>
+            </tbody>
+        </table>
 
         <!-- Mahasiswa Section -->
-        <h3>Mahasiswa Terdaftar</h3>
+        <h3 style="color: black; text-shadow: 2px 2px 5px rgba(0,0,0,0.3);">Mahasiswa</h3>
+        <!-- Search bar -->
+                <div class="d-flex justify-content-between align-items-center mb-3" style="width: 100%;">
+                    <input type="text" class="form-control" style="font-weight: bold;" id="search-bar" placeholder="Cari Mahasiswa" oninput="searchTable()">
+                </div>
+
         <?php if (!empty($mahasiswa)): ?>
-            <table class="table table-bordered">
+            <table id="data-table" class="table table-bordered">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -218,12 +229,12 @@
         <?php endif; ?>
 
         <!-- Form for adding mahasiswa -->
-        <h3>Tambah Mahasiswa ke Jadwal</h3>
+        <h3 style="color: black;">Tambah Mahasiswa ke Jadwal</h3>
         <form action="<?= base_url('admin/jadwal/detail_jadwal/tambah') ?>" method="post">
             <?= csrf_field() ?>
             <input type="hidden" name="jadwal_id" value="<?= $jadwal['id'] ?>">
             <div class="form-group">
-                <label for="mahasiswa_id">Pilih Mahasiswa:</label>
+                <label for="mahasiswa_id" style="color: black;">Pilih Mahasiswa:</label>
                 <select name="mahasiswa_id" id="mahasiswa_id" class="form-control">
                     <option value="">Pilih Mahasiswa</option>
                     <?php foreach ($allMahasiswa as $mhs): ?>
@@ -238,5 +249,38 @@
         <!-- Kembali Button -->
     </div>
 </body>
+
+<script>
+    $(document).ready(function() {
+        $('#data-table').DataTable({
+            "order": [[1, 'asc']]
+        });
+    });
+
+    function searchTable() {
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("search-bar");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("data-table");
+                tr = table.getElementsByTagName("tr");
+
+                for (i = 0; i < tr.length; i++) {
+                    tdNim = tr[i].getElementsByTagName("td")[1]; // NIM column
+                    tdNama = tr[i].getElementsByTagName("td")[2]; // Nama column
+                    if (tdNim && tdNama) {
+                        txtValueNim = tdNim.textContent || tdNim.innerText;
+                        txtValueNama = tdNama.textContent || tdNama.innerText;
+                        if (
+                            txtValueNim.toUpperCase().indexOf(filter) > -1 ||
+                            txtValueNama.toUpperCase().indexOf(filter) > -1
+                        ) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }       
+                }
+            }
+</script>
 
 </html>

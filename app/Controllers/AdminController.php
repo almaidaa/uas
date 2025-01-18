@@ -446,9 +446,11 @@ class AdminController extends BaseController
 
 
         $jadwal = $this->jadwalModel
-            ->select('jadwal_perkuliahan.id, mata_kuliah.nama_mk as mata_kuliah, jadwal_perkuliahan.hari, jadwal_perkuliahan.jam_mulai, jadwal_perkuliahan.jam_selesai')
+            ->select('jadwal_perkuliahan.id, mata_kuliah.nama_mk as mata_kuliah, jadwal_perkuliahan.hari, jadwal_perkuliahan.jam_mulai, jadwal_perkuliahan.jam_selesai,dosen.*')
             ->join('mata_kuliah', 'mata_kuliah.id = jadwal_perkuliahan.mata_kuliah_id')
+            ->join('dosen', 'dosen.id = jadwal_perkuliahan.dosen_id')
             ->find($jadwalId);
+            // dd($jadwal);
 
         if (!$jadwal) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Jadwal tidak ditemukan.');

@@ -140,7 +140,15 @@
 
             <div class="mb-3">
                 <label for="hari" class="form-label">Hari</label>
-                <input type="text" name="hari" class="form-control" required>
+                <select name="hari" class="form-control" required>
+                    <option value="">Pilih Hari</option>
+                    <option value="Senin">Senin</option>
+                    <option value="Selasa">Selasa</option>
+                    <option value="Rabu">Rabu</option>
+                    <option value="Kamis">Kamis</option>
+                    <option value="Jumat">Jumat</option>
+                    <option value="Sabtu">Sabtu</option>
+                </select>
             </div>
 
             <div class="mb-3">
@@ -155,7 +163,14 @@
 
             <div class="mb-3">
                 <label for="ruangan" class="form-label">Ruangan</label>
-                <input type="text" name="ruangan" class="form-control" required>
+                <select name="ruangan" class="form-control" required>
+                    <option value="">Pilih Ruangan</option>
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="A3">A3</option>
+                    <option value="A4">A4</option>
+                    <option value="A5">A5</option>
+                </select>
             </div>
 
             <div class="mb-3">
